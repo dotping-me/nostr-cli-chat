@@ -1,0 +1,3 @@
+# Nostr CLI Chat App
+
+I suggest reading the official docs at [Nostr Dev Guide](https://nostrcg.github.io/devguide/getting-started/introduction/). I will write this `README` later on, hopefully...
