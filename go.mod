@@ -2,7 +2,10 @@ module github.com/dotping-me/nostr-cli-chat
 
 go 1.27.0
 
-require github.com/btcsuite/btcd/btcec/v2 v2.5.1
+require (
+	github.com/btcsuite/btcd/btcec/v2 v2.5.1
+	github.com/coder/websocket v1.8.15
+)
 
 require (
 	github.com/btcsuite/btcd/chainhash/v2 v2.0.0 // indirect

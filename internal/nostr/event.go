@@ -14,14 +14,14 @@ import (
 	"github.com/btcsuite/btcd/btcec/v2/schnorr"
 )
 
-// Event payload as described by NIP-01
+// Event payload and implementation as described by NIP-01
 // See https://github.com/nostr-protocol/nips/blob/master/01.md for more information
 
 // TODO: Implement proper abstraction/encapsulation for Event payload if that helps
 
 type Event struct {
 	ID        string     `json:"id"`
-	PubKey    string     `json:"public_key"`
+	PubKey    string     `json:"pubkey"`
 	CreatedAt int64      `json:"created_at"`
 	Kind      int        `json:"kind"`
 	Tags      [][]string `json:"tags"`
