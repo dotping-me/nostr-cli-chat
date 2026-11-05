@@ -1,4 +1,4 @@
-package tests
+package nostr_test
 
 import (
 	"encoding/hex"

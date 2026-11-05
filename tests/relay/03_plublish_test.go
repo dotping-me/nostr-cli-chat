@@ -35,7 +35,7 @@ func TestPublishEventToRelay(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	r, err := relay.Connect(ctx, "wss://relay.primal.net")
+	r, err := relay.ConnectSync(ctx, "wss://relay.primal.net")
 	if err != nil {
 		t.Fatalf("Failed to connect: %v", err)
 	}
@@ -59,7 +59,7 @@ func TestPublishEventToRelay(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	ack, err := r.Publish(ctx, &event)
+	ack, err := r.PublishSync(ctx, &event)
 	if err != nil {
 		t.Fatal(err)
 	}

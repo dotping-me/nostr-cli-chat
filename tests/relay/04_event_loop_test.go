@@ -22,7 +22,7 @@ func TestSubscribeToRelay(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	r, err := relay.Connect(ctx, "wss://relay.primal.net")
+	r, err := relay.ConnectSync(ctx, "wss://relay.primal.net")
 	if err != nil {
 		t.Fatalf("Failed to connect: %v", err)
 	}
@@ -44,7 +44,7 @@ func TestSubscribeToRelay(t *testing.T) {
 		},
 	}
 
-	if err := r.Subscribe(ctx, req); err != nil {
+	if err := r.SubscribeSync(ctx, req); err != nil {
 		t.Fatal(err)
 	}
 
@@ -65,7 +65,7 @@ func TestPublishAndReceiveEvent(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	r, err := relay.Connect(ctx, "wss://relay.primal.net")
+	r, err := relay.ConnectSync(ctx, "wss://relay.primal.net")
 	if err != nil {
 		t.Fatalf("Failed to connect: %v", err)
 	}
@@ -89,7 +89,7 @@ func TestPublishAndReceiveEvent(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	ack, err := r.Publish(ctx, &event)
+	ack, err := r.PublishSync(ctx, &event)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -111,7 +111,7 @@ func TestPublishAndReceiveEvent(t *testing.T) {
 		},
 	}
 
-	if err := r.Subscribe(ctx, req); err != nil {
+	if err := r.SubscribeSync(ctx, req); err != nil {
 		t.Fatal(err)
 	}
 
@@ -160,7 +160,7 @@ func TestSimulateClientsAndReceiveLiveEventsAfterEOSE(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	clientA, err := relay.Connect(ctx, "wss://relay.primal.net") // Client A
+	clientA, err := relay.ConnectSync(ctx, "wss://relay.primal.net") // Client A
 	if err != nil {
 		t.Fatalf("Client A failed to connect: %v", err)
 	}
@@ -168,7 +168,7 @@ func TestSimulateClientsAndReceiveLiveEventsAfterEOSE(t *testing.T) {
 	t.Log("Client A connected to relay!")
 	defer clientA.Close()
 
-	clientB, err := relay.Connect(ctx, "wss://relay.primal.net") // Client B
+	clientB, err := relay.ConnectSync(ctx, "wss://relay.primal.net") // Client B
 	if err != nil {
 		t.Fatalf("Client B failed to connect: %v", err)
 	}
@@ -187,7 +187,7 @@ func TestSimulateClientsAndReceiveLiveEventsAfterEOSE(t *testing.T) {
 		},
 	}
 
-	if err := clientA.Subscribe(ctx, req); err != nil {
+	if err := clientA.SubscribeSync(ctx, req); err != nil {
 		t.Fatalf("Failed to subscribe: %v", err)
 	}
 
@@ -258,7 +258,7 @@ func TestSimulateClientsAndReceiveLiveEventsAfterEOSE(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			ack, err := clientB.Publish(ctx, &event)
+			ack, err := clientB.PublishSync(ctx, &event)
 			if err != nil {
 				t.Fatalf("Failed publishing live event: %v", err)
 			}

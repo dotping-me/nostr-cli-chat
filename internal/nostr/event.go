@@ -29,6 +29,8 @@ type Event struct {
 	Sig       string     `json:"sig"`
 }
 
+// TODO: Make a constructer that handles some things such as timestamps
+
 // Utility function to validate a given public key and return the btcec equivalent for crypto operations (The key is
 // being returning in hopes of reducing function calls).
 func ValidateAndReturnSchnorrPublicKey(key string) (*btcec.PublicKey, error) {
