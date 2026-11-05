@@ -12,16 +12,21 @@ import (
 	"github.com/dotping-me/nostr-cli-chat/internal/relay"
 )
 
-// Tests the whole Event to Relay and back workflow.
-func TestPublishEventToRelay(t *testing.T) {
-
-	// 0. Generate valid keypair
+func generateKeypair(t *testing.T) (*btcec.PrivateKey, string) {
+	t.Helper()
 	privKey, err := btcec.NewPrivateKey()
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	pubKey := hex.EncodeToString(schnorr.SerializePubKey(privKey.PubKey()))
+	return privKey, hex.EncodeToString(schnorr.SerializePubKey(privKey.PubKey()))
+}
+
+// Tests the whole Event to Relay and back workflow.
+func TestPublishEventToRelay(t *testing.T) {
+
+	// 0. Generate valid keypair
+	privKey, pubKey := generateKeypair(t)
 
 	// 1. Establish connection to relay
 	// NOTE: It may be bad practice to have a real connection here as a test and testing multiple times would mean

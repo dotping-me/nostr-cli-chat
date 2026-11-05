@@ -2,6 +2,7 @@ package relay
 
 import (
 	"encoding/json"
+	"errors"
 
 	"github.com/dotping-me/nostr-cli-chat/internal/nostr"
 )
@@ -22,6 +23,10 @@ type CloseMessage struct {
 }
 
 func (m CloseMessage) MarshalJSON() ([]byte, error) {
+	if m.SubscriptionID == "" {
+		return nil, errors.New("Subscription ID cannot be empty")
+	}
+
 	return json.Marshal([]any{CLOSE_CODE, m.SubscriptionID})
 }
 
@@ -32,19 +37,23 @@ type ReqMessage struct {
 	Filters        []Filter
 }
 
+// TODO: Expand Filter to be more structured, concise and robust
+
 type Filter map[string]any
 
-// Helper function to convert filters from the Filter struct to Any type because this one is recognised by the
-// json standard library.
-func filtersToAny(filters []Filter) []any {
-	result := make([]any, len(filters))
-	for i, filter := range filters {
-		result[i] = filter
+func (m ReqMessage) MarshalJSON() ([]byte, error) {
+	if m.SubscriptionID == "" {
+		return nil, errors.New("Subscription ID cannot be empty")
 	}
 
-	return result
-}
+	if len(m.Filters) == 0 {
+		return nil, errors.New("REQ must contain at least one filter")
+	}
 
-func (m ReqMessage) MarshalJSON() ([]byte, error) {
-	return json.Marshal(append([]any{"REQ", m.SubscriptionID}, filtersToAny(m.Filters)...))
+	msg := []any{REQ_CODE, m.SubscriptionID}
+	for _, filter := range m.Filters {
+		msg = append(msg, filter)
+	}
+
+	return json.Marshal(msg)
 }

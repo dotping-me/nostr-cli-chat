@@ -1,6 +1,7 @@
 package relay_test
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/dotping-me/nostr-cli-chat/internal/relay"
@@ -75,5 +76,22 @@ func TestParseMessage(t *testing.T) {
 				t.Errorf("Expected type %s, got %s", tt.expected, msg.Type())
 			}
 		})
+	}
+}
+
+func TestCloseMessageMarshalJSON(t *testing.T) {
+	msg := relay.CloseMessage{
+		SubscriptionID: "test-sub",
+	}
+
+	data, err := json.Marshal(msg)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	expected := `["CLOSE","test-sub"]`
+
+	if string(data) != expected {
+		t.Fatalf("Expected %s, got %s", expected, data)
 	}
 }

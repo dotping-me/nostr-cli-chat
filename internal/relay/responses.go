@@ -11,18 +11,10 @@ import (
 // Code here (running out of juice on how to start these introductions) is responsible for parsing responses
 // from the relays, AKA what the clients receive
 
-type RelayMessage interface {
+type RelayResponse interface {
 	Type() string
 	Handler(raw []json.RawMessage) error // Basically will validate each field one by one
 }
-
-const (
-	OK_CODE     = "OK"
-	EVENT_CODE  = "EVENT"
-	EOSE_CODE   = "EOSE"
-	NOTICE_CODE = "NOTICE"
-	CLOSE_CODE  = "CLOSE"
-)
 
 // Response structure to success/acknowledgement messages (i.e. Status 200).
 type OKMessage struct {
@@ -125,7 +117,7 @@ func (m *NoticeMessage) Handler(raw []json.RawMessage) error {
 }
 
 // Parses the received JSON array from the relay to obtain information
-func ParseIncomingMessageFromRelay(data []byte) (RelayMessage, error) {
+func ParseIncomingMessageFromRelay(data []byte) (RelayResponse, error) {
 
 	var raw []json.RawMessage
 	if err := json.Unmarshal(data, &raw); err != nil {
@@ -141,7 +133,7 @@ func ParseIncomingMessageFromRelay(data []byte) (RelayMessage, error) {
 		return nil, errors.New("Relay message type must be a string")
 	}
 
-	var msg RelayMessage
+	var msg RelayResponse
 	switch msgType {
 	case OK_CODE:
 		msg = &OKMessage{}
